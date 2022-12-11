@@ -1,0 +1,154 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+nav {
+  height: 8vh;
+  width: 100vw;
+  border-bottom: 1px solid rgb(133, 133, 133);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: white;
+}
+
+nav > * {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+nav h1 {
+  left: 30px;
+}
+nav img {
+  right: 30px;
+  height: 5vh;
+}
+
+.tweet {
+  margin-top: 10vh;
+  border-bottom: 10px lightgray solid;
+  padding-bottom: 25px;
+}
+
+.tweet section {
+  width: 100vw;
+  display: flex;
+  position: relative;
+}
+
+.pfp img {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  margin: 10px 20px 0 20px;
+}
+
+.input-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+textarea {
+  border: none;
+  width: 75vw;
+  max-height: 100px;
+  resize: vertical;
+  margin-bottom: 30px;
+}
+
+.tweet-buttons {
+  width: 25px;
+}
+
+.blue-btns {
+  position: absolute;
+  left: 95px;
+  transform: translateY(-15px);
+}
+
+.tweet-btn {
+  color: white;
+  font-style: bold;
+  background-color: rgb(58, 180, 255);
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  position: absolute;
+  right: 30px;
+  top: -30px;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+}
+
+.post {
+  width: 100vw;
+  border-bottom: 1px solid lightgray;
+  display: flex;
+  flex-direction: row;
+}
+
+.pfp-container {
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border-radius: 50%;
+  margin: 10px 20px 10px 20px;
+}
+.pfp-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.post-icons {
+  display: flex;
+  width: 90vw;
+  margin: 10px 0;
+}
+
+.post-icons img {
+  width: 25px;
+  margin-right: 20%;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.name h2 {
+  font-size: 14pt;
+  color: black;
+}
+
+.name h3 {
+  font-size: 12pt;
+  margin-left: 5px;
+  color: grey;
+}
+
+.content p {
+  margin-top: 10px;
+}
+
+.content img {
+  margin-top: 10px;
+  max-width: 80vw;
+  border-radius: 10px;
+}
+
+em {
+  color: rgb(58, 180, 255);
+}

@@ -1,0 +1,66 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  color: rgb(210, 210, 210);
+  font-family: Times, "Times New Roman";
+}
+
+body {
+  background-color: rgb(18, 17, 19);
+}
+
+#game-screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+}
+
+#game-screen > h1,
+#game-screen > h2,
+#game-screen > p {
+  margin-bottom: 30px;
+}
+
+#door-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.door {
+  min-width: 100px;
+  max-width: 15vw;
+  transition: all 0.3s ease;
+  max-height: 70vh;
+}
+
+.door:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+#win-screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+}
+
+#win-screen > h1 {
+  font-size: 35pt;
+  margin-bottom: 40px;
+}
+
+#win-screen > button {
+  font-size: 18pt;
+  background-color: rgb(18, 17, 19);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ESP32 WIFI server</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="text/javascript" src="script.js" defer></script>
+</head>
+
+<body>
+  <div class="center">
+    <h1>Thermostat</h1>
+    <div class="data-container">
+      <div class="data">
+        <p id="temp-state">Temperature: ---</p>
+        <p id="humidity-state">Humidity: ---</p>
+      </div>
+    </div>
+    <div class="toggle-container">
+      <div>
+        <p>Heater</p>
+        <label for="heater" class="switch">
+          <input type="checkbox" name="heater" id="heater">
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div>
+        <p>Humidifier</p>
+        <label for="humidifier" class="switch">
+          <input type="checkbox" name="humidifier" id="humidifier">
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
