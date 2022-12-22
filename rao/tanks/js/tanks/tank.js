@@ -12,7 +12,8 @@ export class Tank {
     this.speedY = 0;
     this.velocity = 6;
 
-    this.hp = hp;
+    this.maxHp = hp;
+    this.currentHp = hp;
     this.color = color;
 
     // cannon
@@ -70,6 +71,25 @@ export class Tank {
     ctx.rotate(this.cannonAngle);
     ctx.fillRect(-this.cannonWidth / 2, 0, this.cannonWidth, this.cannonHeight);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    //health bar background
+    ctx.beginPath();
+    ctx.fillStyle = "black";
+    ctx.fillRect(
+      this.x - this.radius,
+      this.y - this.radius - 25,
+      this.radius * 2,
+      8
+    );
+
+    //health bar value
+    ctx.fillStyle = "green";
+    ctx.fillRect(
+      this.x - this.radius,
+      this.y - this.radius - 25,
+      ((this.radius * 2) / this.maxHp) * this.currentHp,
+      8
+    );
   }
 
   shoot() {
