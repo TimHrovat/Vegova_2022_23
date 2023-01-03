@@ -16,7 +16,15 @@ function falseSurname() {
     echo "<p>Program:".$_GET["programme"]."</p>";
 }
 
-if (!ctype_upper($_GET["name"][0])) 
+function falseData() {
+    echo "<p>Ime: ".ucfirst(strtolower($_GET["name"]))." (<span style='color:red;'>".$_GET["name"]."</span>)</p>";
+    echo "<p>Priimek: ".ucfirst(strtolower($_GET["surname"]))." (<span style='color:red;'>".$_GET["surname"]."</span>)</p>";
+    echo "<p>Program:".$_GET["programme"]."</p>";
+}
+
+if (!ctype_upper($_GET["name"][0]) && !ctype_upper($_GET["surname"][0])) 
+    falseData();
+else if (!ctype_upper($_GET["name"][0])) 
     falseName();
 else if (!ctype_upper($_GET["surname"][0])) 
     falseSurname();
