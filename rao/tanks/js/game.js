@@ -18,6 +18,7 @@ setInterval(() => {
 
   player.update();
   checkCollisions();
+  checkHealth();
 
   enemies.forEach((enemy) => {
     enemy.update();
@@ -101,11 +102,31 @@ function checkCollisions() {
       if (distance < enemy.radius) {
         enemy.currentHp -= 20;
         player.bullets.splice(index, 1);
-        // deletes enemy with no hp
-        if (enemy.currentHp <= 0) {
-          enemies.splice(index, 1);
-        }
+      }
+    });
+
+    enemy.bullets.forEach((bullet, index) => {
+      const distance = Math.sqrt(
+        Math.pow(bullet.x - player.x, 2) + Math.pow(bullet.y - player.y, 2)
+      );
+
+      if (distance < player.radius) {
+        player.currentHp -= 20;
+        enemy.bullets.splice(index, 1);
       }
     });
   });
+}
+
+function checkHealth() {
+  enemies.forEach((enemy, index) => {
+    // deletes enemy with no hp
+    if (enemy.currentHp <= 0) {
+      enemies.splice(index, 1);
+    }
+  });
+
+  if (player.currentHp <= 0) {
+    window.location.replace("../html/index.html");
+  }
 }
