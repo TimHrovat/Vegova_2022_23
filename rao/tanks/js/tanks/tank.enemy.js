@@ -1,8 +1,8 @@
 import { Tank } from "./tank.js";
 
 export class EnemyTank extends Tank {
-  constructor(x, y, hp, color) {
-    super(x, y, hp, color);
+  constructor(x, y, hp, color, velocity) {
+    super(x, y, hp, color, velocity);
 
     this.setMovement();
   }

@@ -2,7 +2,7 @@ import { Bullet } from "./bullet.js";
 import { ctx } from "../game.js";
 
 export class Tank {
-  constructor(x, y, hp, color) {
+  constructor(x, y, hp, color, velocity) {
     // position & size
     this.x = x;
     this.y = y;
@@ -10,7 +10,7 @@ export class Tank {
     // speed & velocity
     this.speedX = 0;
     this.speedY = 0;
-    this.velocity = 6;
+    this.velocity = velocity;
 
     this.maxHp = hp;
     this.currentHp = hp;
