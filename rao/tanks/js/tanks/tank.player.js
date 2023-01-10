@@ -1,4 +1,5 @@
 import { Tank } from "./tank.js";
+import { Bullet } from "./bullet.js";
 
 export class PlayerTank extends Tank {
   constructor(x, y, hp, color, velocity) {
@@ -25,9 +26,9 @@ export class PlayerTank extends Tank {
   }
 
   shoot() {
-    this.bulletMag--;
+    if (this.bulletMag - 1 < 0) return;
 
-    if (this.bulletMag == 0) return;
+    this.bulletMag--;
 
     this.bullets.push(
       new Bullet(this.x, this.y, this.cannonAngle + Math.PI / 2, 25)

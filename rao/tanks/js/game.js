@@ -4,6 +4,11 @@ import {
   checkCollisions,
   checkHealth,
   getRandom,
+  createFirstPowerups,
+  createNewMagazine,
+  createNewMedkit,
+  drawPowerups,
+  checkPowerupCollisions,
 } from "./game_functions.js";
 
 const canvas = document.getElementById("canvas");
@@ -14,7 +19,14 @@ ctx.canvas.height = window.innerHeight;
 
 export const player = new PlayerTank(300, 300, 4000, "green", 10);
 export let enemies = [];
+export let powerups = {
+  magazines: [],
+  medkits: [],
+};
+
 let numOfEnemies = 0;
+
+createFirstPowerups();
 
 // updates and draws all (60fps)
 setInterval(() => {
@@ -35,8 +47,10 @@ setInterval(() => {
     enemy.update();
     enemy.cannonFollowObject(player.x, player.y);
     enemy.draw();
-    console.log(enemy.currentHp);
   });
+
+  checkPowerupCollisions();
+  drawPowerups();
 
   player.draw();
   ctx.stroke();
@@ -45,7 +59,6 @@ setInterval(() => {
 // enemy shoots bullet every second
 setInterval(() => {
   if (enemies.length) enemies[getRandom(enemies.length)].shoot();
-  console.log(enemies);
 }, 1000);
 
 document.addEventListener("resize", (e) => {

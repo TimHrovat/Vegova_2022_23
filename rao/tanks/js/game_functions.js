@@ -1,5 +1,7 @@
-import { player, enemies } from "./game.js";
+import { player, enemies, powerups } from "./game.js";
 import { EnemyTank } from "./tanks/tank.enemy.js";
+import { Medkit } from "./powerups/medkit.js";
+import { Magazine } from "./powerups/magazine.js";
 
 export function spawnEnemyTank(minDistanceFromPlayer) {
   const x = getRandomOutOfPlayerRadius(
@@ -14,7 +16,77 @@ export function spawnEnemyTank(minDistanceFromPlayer) {
   );
 
   enemies.push(new EnemyTank(x, y, 100, "RGB(117, 81, 57)", 6));
-  console.log("Enemy tank spawned");
+}
+
+export function createNewMedkit(minDistanceFromPlayer) {
+  const x = getRandomOutOfPlayerRadius(
+    player.x,
+    minDistanceFromPlayer,
+    window.innerWidth
+  );
+  const y = getRandomOutOfPlayerRadius(
+    player.y,
+    minDistanceFromPlayer,
+    window.innerHeight
+  );
+
+  powerups.medkits.push(new Medkit(x, y, 40, 40, 20, "medkit"));
+}
+
+export function createNewMagazine(minDistanceFromPlayer) {
+  const x = getRandomOutOfPlayerRadius(
+    player.x,
+    minDistanceFromPlayer,
+    window.innerWidth
+  );
+  const y = getRandomOutOfPlayerRadius(
+    player.y,
+    minDistanceFromPlayer,
+    window.innerHeight
+  );
+
+  powerups.magazines.push(new Magazine(x, y, 40, 40, 20, "magazine"));
+}
+
+export function createFirstPowerups() {
+  for (let i = 0; i < 3; i++) {
+    createNewMagazine(200);
+    createNewMedkit(200);
+  }
+}
+
+export function checkPowerupCollisions() {
+  powerups.magazines.forEach((mag, index) => {
+    const distance = Math.sqrt(
+      //TODO: fix collision
+      Math.pow(mag.x + mag.width - player.x, 2) +
+        Math.pow(mag.y + mag.height - player.y, 2)
+    );
+
+    if (distance < player.radius) {
+      player.bulletMag += mag.capacity;
+      powerups.magazines.splice(index, 1);
+      createNewMagazine(200);
+    }
+  });
+  powerups.medkits.forEach((med, index) => {
+    const distance = Math.sqrt(
+      //TODO: fix collision
+      Math.pow(med.x + med.width - player.x, 2) +
+        Math.pow(med.y + med.height - player.y, 2)
+    );
+
+    if (distance < player.radius) {
+      player.currentHp += med.capacity;
+      powerups.medkits.splice(index, 1);
+      createNewMedkit(200);
+    }
+  });
+}
+
+export function drawPowerups() {
+  powerups.magazines.forEach((mag) => mag.draw());
+  powerups.medkits.forEach((med) => med.draw());
 }
 
 export function getRandom(max) {
