@@ -5,13 +5,12 @@ import {
   checkHealth,
   getRandom,
   createFirstPowerups,
-  createNewMagazine,
-  createNewMedkit,
   drawPowerups,
   checkPowerupCollisions,
+  drawBackground,
 } from "./game_functions.js";
 
-const canvas = document.getElementById("canvas");
+export const canvas = document.getElementById("canvas");
 export const ctx = canvas.getContext("2d");
 
 ctx.canvas.width = window.innerWidth;
@@ -28,9 +27,17 @@ let numOfEnemies = 0;
 
 createFirstPowerups();
 
+let killedEnemies = 0;
+
+export function incrementKilledEnemies() {
+  killedEnemies++;
+}
+
 // updates and draws all (60fps)
 setInterval(() => {
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+  drawBackground();
 
   if (enemies.length == 0) {
     numOfEnemies++;
@@ -39,9 +46,8 @@ setInterval(() => {
     }
   }
 
-  player.update();
-  checkCollisions();
-  checkHealth();
+  checkPowerupCollisions();
+  drawPowerups();
 
   enemies.forEach((enemy) => {
     enemy.update();
@@ -49,10 +55,11 @@ setInterval(() => {
     enemy.draw();
   });
 
-  checkPowerupCollisions();
-  drawPowerups();
-
+  player.update();
+  checkCollisions();
+  checkHealth();
   player.draw();
+
   ctx.stroke();
 }, 1000 / 60);
 

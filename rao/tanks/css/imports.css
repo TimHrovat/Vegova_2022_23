@@ -1,9 +1,13 @@
 @import "canvas.css";
+@import "index.css";
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Orbitron", sans-serif;
+  color: rgb(203, 203, 203);
 }
 
 html,
@@ -11,4 +15,5 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background-image: url("../assets/carbon_fibre.png");
 }

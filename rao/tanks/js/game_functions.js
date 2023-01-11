@@ -1,18 +1,36 @@
-import { player, enemies, powerups } from "./game.js";
+import {
+  player,
+  enemies,
+  powerups,
+  ctx,
+  canvas,
+  incrementKilledEnemies,
+} from "./game.js";
 import { EnemyTank } from "./tanks/tank.enemy.js";
 import { Medkit } from "./powerups/medkit.js";
 import { Magazine } from "./powerups/magazine.js";
+
+const img = new Image();
+img.src = "../assets/carbon_fibre.png";
+
+export function drawBackground() {
+  const ptrn = ctx.createPattern(img, "repeat");
+  ctx.fillStyle = ptrn;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
 
 export function spawnEnemyTank(minDistanceFromPlayer) {
   const x = getRandomOutOfPlayerRadius(
     player.x,
     minDistanceFromPlayer,
-    window.innerWidth
+    window.innerWidth,
+    70
   );
   const y = getRandomOutOfPlayerRadius(
     player.y,
     minDistanceFromPlayer,
-    window.innerHeight
+    window.innerHeight,
+    70
   );
 
   enemies.push(new EnemyTank(x, y, 100, "RGB(117, 81, 57)", 6));
@@ -22,12 +40,14 @@ export function createNewMedkit(minDistanceFromPlayer) {
   const x = getRandomOutOfPlayerRadius(
     player.x,
     minDistanceFromPlayer,
-    window.innerWidth
+    window.innerWidth,
+    40
   );
   const y = getRandomOutOfPlayerRadius(
     player.y,
     minDistanceFromPlayer,
-    window.innerHeight
+    window.innerHeight,
+    40
   );
 
   powerups.medkits.push(new Medkit(x, y, 40, 40, 20, "medkit"));
@@ -37,12 +57,14 @@ export function createNewMagazine(minDistanceFromPlayer) {
   const x = getRandomOutOfPlayerRadius(
     player.x,
     minDistanceFromPlayer,
-    window.innerWidth
+    window.innerWidth,
+    40
   );
   const y = getRandomOutOfPlayerRadius(
     player.y,
     minDistanceFromPlayer,
-    window.innerHeight
+    window.innerHeight,
+    40
   );
 
   powerups.magazines.push(new Magazine(x, y, 40, 40, 20, "magazine"));
@@ -50,36 +72,41 @@ export function createNewMagazine(minDistanceFromPlayer) {
 
 export function createFirstPowerups() {
   for (let i = 0; i < 3; i++) {
-    createNewMagazine(200);
-    createNewMedkit(200);
+    createNewMagazine(150);
+    createNewMedkit(150);
   }
 }
 
 export function checkPowerupCollisions() {
   powerups.magazines.forEach((mag, index) => {
     const distance = Math.sqrt(
-      //TODO: fix collision
-      Math.pow(mag.x + mag.width - player.x, 2) +
-        Math.pow(mag.y + mag.height - player.y, 2)
+      Math.pow(mag.x + mag.width / 2 - player.x, 2) +
+        Math.pow(mag.y + mag.height / 2 - player.y, 2)
     );
 
     if (distance < player.radius) {
       player.bulletMag += mag.capacity;
       powerups.magazines.splice(index, 1);
-      createNewMagazine(200);
+      createNewMagazine(150);
     }
   });
   powerups.medkits.forEach((med, index) => {
     const distance = Math.sqrt(
-      //TODO: fix collision
-      Math.pow(med.x + med.width - player.x, 2) +
-        Math.pow(med.y + med.height - player.y, 2)
+      Math.pow(med.x + med.width / 2 - player.x, 2) +
+        Math.pow(med.y + med.height / 2 - player.y, 2)
     );
 
+    const valid = player.currentHp + med.capacity < player.maxHp;
+
     if (distance < player.radius) {
-      player.currentHp += med.capacity;
+      if (!valid) {
+        player.currentHp = player.maxHp;
+      } else {
+        player.currentHp += med.capacity;
+      }
+
       powerups.medkits.splice(index, 1);
-      createNewMedkit(200);
+      createNewMedkit(150);
     }
   });
 }
@@ -123,9 +150,10 @@ export function checkCollisions() {
 
 export function checkHealth() {
   enemies.forEach((enemy, index) => {
-    // deletes enemy with no hp
+    // enemy killed
     if (enemy.currentHp <= 0) {
       enemies.splice(index, 1);
+      incrementKilledEnemies();
     }
   });
 
@@ -138,15 +166,28 @@ function getRandomBetween(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-function getRandomOutOfPlayerRadius(playerAxisValue, radius, maxValue) {
-  const fromZeroToRadius = getRandom(playerAxisValue - radius);
-  const fromRadiusToMaxValue = getRandomBetween(
-    playerAxisValue + radius,
-    maxValue
-  );
+function getRandomOutOfPlayerRadius(playerAxisValue, radius, maxValue, offset) {
+  let fromZeroToRadius;
+  let fromRadiusToMaxValue;
+  const valid = [];
 
-  const random = getRandom(2);
+  do {
+    fromZeroToRadius = getRandomBetween(offset * 2, playerAxisValue - radius);
+    fromRadiusToMaxValue = getRandomBetween(
+      playerAxisValue + radius,
+      maxValue - offset * 2
+    );
 
-  if (random == 1) return fromZeroToRadius;
-  else return fromRadiusToMaxValue;
+    if (fromZeroToRadius > 0 && playerAxisValue - radius > offset)
+      valid.push(fromZeroToRadius);
+    if (
+      fromRadiusToMaxValue < maxValue &&
+      playerAxisValue + radius < maxValue - radius
+    )
+      valid.push(fromRadiusToMaxValue);
+  } while (valid.length === 0);
+
+  const random = getRandom(valid.length);
+
+  return valid[random];
 }
