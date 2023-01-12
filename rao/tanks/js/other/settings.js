@@ -1,14 +1,11 @@
-import { audio } from "./menu_audio.js";
 import { setDefaultGameControls } from "./index.js";
-
-let volume = document.getElementById("volume-slider");
 
 export function loadSettingsDataFromLocalStorage() {
   const volumeFromLocalStorage = JSON.parse(localStorage.getItem("volume"));
 
-  volume.value = volumeFromLocalStorage
-    ? volumeFromLocalStorage * 100
-    : audio.volume * 100;
+  let volume = document.getElementById("volume-slider");
+
+  volume.value = volumeFromLocalStorage ? volumeFromLocalStorage * 100 : 0.5;
 
   setDefaultGameControls();
 
@@ -23,12 +20,6 @@ export function loadSettingsDataFromLocalStorage() {
     appendSetting(key, value);
   }
 }
-
-if (volume)
-  volume.addEventListener("change", function (e) {
-    audio.volume = e.currentTarget.value / 100;
-    localStorage.setItem("volume", JSON.stringify(audio.volume));
-  });
 
 function appendSetting(key, value) {
   const container = document.createElement("tr");

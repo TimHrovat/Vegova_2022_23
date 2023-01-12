@@ -68,6 +68,16 @@ export class PlayerTank extends Tank {
       new Bullet(this.x, this.y, this.cannonAngle + Math.PI / 2, 25)
     );
   }
+
+  updateControls() {
+    const keys = JSON.parse(localStorage.getItem("game_controls"));
+
+    this.upKey = keys.up;
+    this.downKey = keys.down;
+    this.leftKey = keys.left;
+    this.rightKey = keys.right;
+    this.shootKey = keys.shoot;
+  }
 }
 
 //TODO: Q ustav tank in mu da boost

@@ -13,6 +13,41 @@
 
 <body>
     <canvas id="canvas" width="1000" height="1000"></canvas>
+    <div class="current-score-container">
+        <div>
+            <div>Bullets: </div>
+            <div id="bullets-container">0</div>
+        </div>
+        <div>
+            <div>Enemies killed: </div>
+            <div id="enemies-killed-container">0</div>
+        </div>
+    </div>
+    <div class="center hidden main-menu" id="pause-menu-container">
+        <h1>PAUSE</h1>
+        <div>
+            <button class="pause-menu-button" id="settings-btn">Settings</button>
+            <button class="pause-menu-button" id="quit-game-btn">Quit</button>
+            <button class="pause-menu-button" id="quit-save-game-btn">Quit & Save Score</button>
+        </div>
+    </div>
+    <div id="settings" class="center main-menu hidden">
+        <h1>Settings</h1>
+        <div id="settings-container">
+            <h2>sound</h2>
+            <input type="range" id="volume-slider">
+            <h2>player movement</h2>
+            <table id="controls-container"></table>
+        </div>
+        <button class="back-button" id="show-pause-menu-btn">Return</button>
+    </div>
+    <div id="lose" class="center main-menu hidden">
+        <h1>You Lose!</h1>
+        <div>
+            <button class="pause-menu-button" id="play-again-btn">Play Again</button>
+            <button class="pause-menu-button" id="quit-to-main-menu-btn">Quit</button>
+        </div>
+    </div>
     <div style="display:none;">
         <img id="magazine" src="../assets/icons8-ammo-96.png" width="300" height="227" />
         <img id="medkit" src="../assets/icons8-medical-kit-64.png" width="300" height="227" />

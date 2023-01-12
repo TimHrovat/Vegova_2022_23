@@ -11,9 +11,55 @@ import { EnemyTank } from "./tanks/tank.enemy.js";
 import { Medkit } from "./powerups/medkit.js";
 import { Magazine } from "./powerups/magazine.js";
 import { addScoreToScoreboard } from "./other/index.js";
+import { loadSettingsDataFromLocalStorage } from "./other/settings.js";
 
 const img = new Image();
 img.src = "../assets/carbon_fibre.png";
+
+const quitButton = document.getElementById("quit-game-btn");
+const quitSaveButton = document.getElementById("quit-save-game-btn");
+const settingsButton = document.getElementById("settings-btn");
+const pauseMenu = document.getElementById("pause-menu-container");
+const pauseMenuBtn = document.getElementById("show-pause-menu-btn");
+
+quitButton.addEventListener("click", () => {
+  window.location.replace("../html/index.html");
+});
+
+quitSaveButton.addEventListener("click", () => {
+  addScoreToScoreboard(
+    localStorage.getItem("current_player_name"),
+    killedEnemies
+  );
+
+  window.location.replace("../html/index.html");
+});
+
+settingsButton.addEventListener("click", () => {
+  const settings = document.getElementById("settings");
+
+  if (settings.classList.contains("hidden")) {
+    loadSettingsDataFromLocalStorage();
+    settings.classList.remove("hidden");
+    pauseMenu.classList.add("hidden");
+    return;
+  }
+  pauseMenu.classList.remove("hidden");
+  settings.classList.add("hidden");
+});
+
+pauseMenuBtn.addEventListener("click", () => {
+  const settings = document.getElementById("settings");
+
+  if (settings.classList.contains("hidden")) {
+    settings.classList.remove("hidden");
+    pauseMenu.classList.add("hidden");
+    return;
+  }
+  player.updateControls();
+  pauseMenu.classList.remove("hidden");
+  settings.classList.add("hidden");
+});
 
 export function drawBackground() {
   const ptrn = ctx.createPattern(img, "repeat");
@@ -21,7 +67,17 @@ export function drawBackground() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-let gameRunning = true;
+export let gameRunning = true;
+
+export function changeGameRunning() {
+  gameRunning = !gameRunning;
+
+  if (!gameRunning) {
+    pauseMenu.classList.remove("hidden");
+    return;
+  }
+  pauseMenu.classList.add("hidden");
+}
 
 export function spawnEnemyTank(minDistanceFromPlayer) {
   const x = getRandomOutOfPlayerRadius(
@@ -168,7 +224,10 @@ export function checkHealth() {
       killedEnemies
     );
     gameRunning = false;
-    window.location.replace("../html/index.html");
+    // window.location.replace("../html/index.html");
+    const loseScreen = document.getElementById("lose");
+
+    loseScreen.classList.remove("hidden");
   }
 }
 
@@ -201,3 +260,24 @@ function getRandomOutOfPlayerRadius(playerAxisValue, radius, maxValue, offset) {
 
   return valid[random];
 }
+
+export function updateCurrentScores() {
+  const bulletsContainer = document.getElementById("bullets-container");
+  const enemiesKilledContainer = document.getElementById(
+    "enemies-killed-container"
+  );
+
+  bulletsContainer.innerHTML = player.bulletMag;
+  enemiesKilledContainer.innerHTML = killedEnemies;
+}
+
+const playAgainBtn = document.getElementById("play-again-btn");
+const quitToMainMenuBtn = document.getElementById("quit-to-main-menu-btn");
+
+playAgainBtn.addEventListener("click", (e) => {
+  window.location.replace("../html/game.html");
+});
+
+quitToMainMenuBtn.addEventListener("click", (e) => {
+  window.location.replace("../html/index.html");
+});
