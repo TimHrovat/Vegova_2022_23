@@ -5,10 +5,12 @@ import {
   ctx,
   canvas,
   incrementKilledEnemies,
+  killedEnemies,
 } from "./game.js";
 import { EnemyTank } from "./tanks/tank.enemy.js";
 import { Medkit } from "./powerups/medkit.js";
 import { Magazine } from "./powerups/magazine.js";
+import { addScoreToScoreboard } from "./other/index.js";
 
 const img = new Image();
 img.src = "../assets/carbon_fibre.png";
@@ -18,6 +20,8 @@ export function drawBackground() {
   ctx.fillStyle = ptrn;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
+
+let gameRunning = true;
 
 export function spawnEnemyTank(minDistanceFromPlayer) {
   const x = getRandomOutOfPlayerRadius(
@@ -157,7 +161,13 @@ export function checkHealth() {
     }
   });
 
-  if (player.currentHp <= 0) {
+  if (player.currentHp <= 0 && gameRunning) {
+    localStorage.setItem("last_score", killedEnemies);
+    addScoreToScoreboard(
+      localStorage.getItem("current_player_name"),
+      killedEnemies
+    );
+    gameRunning = false;
     window.location.replace("../html/index.html");
   }
 }

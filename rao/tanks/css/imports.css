@@ -1,6 +1,8 @@
 @import "canvas.css";
 @import "index.css";
+@import "scoreboard.css";
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap");
+@import "settings.css";
 
 * {
   margin: 0;
@@ -16,4 +18,22 @@ body {
   height: 100vh;
   overflow: hidden;
   background-image: url("../assets/carbon_fibre.png");
+}
+
+.back-button {
+  border-radius: 8px;
+  background-color: rgb(17, 17, 17);
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: orange;
+  color: rgb(17, 17, 17);
+}
+
+.hidden {
+  display: none;
 }

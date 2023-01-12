@@ -1,0 +1,56 @@
+#settings-container {
+  background-color: rgb(17, 17, 17);
+  padding: 20px 30px;
+  border-spacing: 0 1em;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+#settings-container h2 {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+#settings-container input[type="range"] {
+  margin-bottom: 20px;
+}
+
+#controls-container tr td:nth-child(2),
+#controls-container tr td:nth-child(3) {
+  padding-bottom: 10px;
+  padding-left: 20px;
+}
+
+#controls-container tr td:nth-child(1) {
+  text-align: left;
+}
+
+#controls-container tr td input {
+  text-align: center;
+  width: 35px;
+  height: 35px;
+  background-color: orange;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  color: rgb(43, 43, 43);
+}
+
+#controls-container tr td input:hover {
+  cursor: text;
+}
+
+#controls-container tr td button {
+  text-align: center;
+  background-color: orange;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  color: rgb(43, 43, 43);
+  height: 35px;
+  padding: 0 10px;
+}
+
+#controls-container tr td button:hover {
+  cursor: pointer;
+}
