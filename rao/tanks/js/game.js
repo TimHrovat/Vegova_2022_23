@@ -19,7 +19,7 @@ export const ctx = canvas.getContext("2d");
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 
-export const player = new PlayerTank(300, 300, 40, "green", 10);
+export const player = new PlayerTank(300, 300, 100, "green", 10);
 export let enemies = [];
 export let powerups = {
   magazines: [],
