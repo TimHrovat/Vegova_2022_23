@@ -97,4 +97,9 @@ export class Tank {
       new Bullet(this.x, this.y, this.cannonAngle + Math.PI / 2, 25)
     );
   }
+
+  movementZero() {
+    this.speedX = 0;
+    this.speedY = 0;
+  }
 }

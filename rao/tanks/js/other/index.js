@@ -19,6 +19,13 @@ if (a_play)
 if (name) {
   const currentName = localStorage.getItem("current_player_name");
   if (currentName) name.value = currentName;
+
+  // TODO: scoreboard doesnt update
+  name.addEventListener("focusout", (e) => {
+    if (e.target.value !== "")
+      localStorage.setItem("current_player_name", e.target.value);
+    console.log(localStorage.getItem("current_player_name"));
+  });
 }
 
 export function setDefaultGameControls() {

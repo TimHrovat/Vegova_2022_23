@@ -48,12 +48,20 @@ function appendSetting(key, value) {
     tdButton.classList.remove("hidden");
   });
 
+  valueContainer.addEventListener("input", function (e) {
+    e.target.style.color = "green";
+    if (e.target.value == "p") valueContainer.style.color = "red";
+  });
+
   button.addEventListener("click", function (e) {
     e.preventDefault();
 
     const val = valueContainer.value;
 
-    if (val === "") return;
+    if (val === "" || val == "p") {
+      valueContainer.style.color = "red";
+      return;
+    }
 
     tdButton.classList.add("hidden");
 

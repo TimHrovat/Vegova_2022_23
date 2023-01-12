@@ -77,6 +77,12 @@ export function changeGameRunning() {
     return;
   }
   pauseMenu.classList.add("hidden");
+
+  const settings = document.getElementById("settings");
+
+  settings.classList.add("hidden");
+
+  player.movementZero();
 }
 
 export function spawnEnemyTank(minDistanceFromPlayer) {
