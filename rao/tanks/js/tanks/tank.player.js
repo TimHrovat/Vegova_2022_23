@@ -79,5 +79,3 @@ export class PlayerTank extends Tank {
     this.shootKey = keys.shoot;
   }
 }
-
-//TODO: Q ustav tank in mu da boost

@@ -2,6 +2,10 @@
 
 A simple game made in vanilla Javascript as a school project.
 
+# Requirements
+
+Autoplay must be enabled in your browser for background music to work.
+
 ## Gameplay
 
 The goal is to kill as many enemy tanks as their numbers increase.

@@ -8,8 +8,8 @@
 #define humidifier 25
 #define heater 26
 
-const char *ssid = "Tenda_1BD460";
-const char *pass = "T48mgVEf";
+const char *ssid = "Vegova RVP4";
+const char *pass = "Vegova_RVP4";
 
 float humidity;
 float temperature;
