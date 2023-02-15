@@ -20,6 +20,7 @@ export class Tank {
     this.cannonAngle = 0;
     this.cannonWidth = 15;
     this.cannonHeight = 45;
+
     // bullet
     this.bullets = [];
   }
