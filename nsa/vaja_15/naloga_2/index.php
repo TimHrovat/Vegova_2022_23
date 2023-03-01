@@ -1,6 +1,6 @@
 <form action="izpis.php" method="post">
-    <input type="text" name="ime" placeholder="ime" /><br />
-    <input type="text" name="priimek" placeholder="priimek" /><br />
+    <input type="text" name="ime" placeholder="ime" required/><br />
+    <input type="text" name="priimek" placeholder="priimek" required/><br />
 
     <br />
 
@@ -14,20 +14,20 @@
     <br />
 
     <label for="anglescina">Angleščina</label>
-    <input type="checkbox" id="anglescina" name="jeziki" value="angleščina" /><br />
+    <input type="checkbox" id="anglescina" name="jeziki[]" value="angleščina" /><br />
     <label for="spain">Španščina</label>
-    <input type="checkbox" id="spain" name="jeziki" value="španščina" /><br />
+    <input type="checkbox" id="spain" name="jeziki[]" value="španščina" /><br />
     <label for="nem">Nemščina</label>
-    <input type="checkbox" id="nem" name="jeziki" value="nemščina" /><br />
+    <input type="checkbox" id="nem" name="jeziki[]" value="nemščina" /><br />
     <label for="franc">Francoščina</label>
-    <input type="checkbox" id="franc" name="jeziki" value="francoščina" /><br />
+    <input type="checkbox" id="franc" name="jeziki[]" value="francoščina" /><br />
     <label for="drugo">Drugo</label>
-    <input type="checkbox" id="drugo" name="jeziki" value="drugo" /><br />
+    <input type="checkbox" id="drugo" name="jeziki[]" value="drugo" /><br />
 
     <br />
 
     <label for="sport">Izberi šport:</label>
-    <select multiple name="sport" id="sport">
+    <select multiple="multiple" name="sport[]" id="sport">
         <option value="atletika">Atletika</option>
         <option value="smučanje">Smučanje</option>
         <option value="plavanje">Plavanje</option>
@@ -37,8 +37,8 @@
     <br />
     <br />
 
-    <label for="glasba">Izberi šport:</label>
-    <select multiple name="glasba" id="glasba">
+    <label for="glasba">Izberi glasbeno zvrst:</label>
+    <select multiple name="glasba[]" id="glasba">
         <option value="klasika">Klasika</option>
         <option value="pop">Pop</option>
         <option value="rock">Rock</option>
@@ -47,4 +47,5 @@
     </select>
 
     <input type="submit" value="submit" />
+    <input type="reset" value="reset" />
 </form>
