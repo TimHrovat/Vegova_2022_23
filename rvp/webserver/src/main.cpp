@@ -44,17 +44,33 @@ void setup() {
     }
     Serial.println(WiFi.localIP());
 
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(SPIFFS, "/index.html", String(), false);
-    });
+    // server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //     request->send(SPIFFS, "/index.html", String(), false);
+    // });
 
-    server.on("/styles.css", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(SPIFFS, "/styles.css", "text/css");
-    });
+    // server.on("/styles.css", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //     request->send(SPIFFS, "/styles.css", "text/css");
+    // });
 
-    server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(SPIFFS, "/script.js", "text/javascript");
-    });
+    // server.on("/slider.css", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //     request->send(SPIFFS, "/slider.css", "text/css");
+    // });
+
+    // server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //     request->send(SPIFFS, "/script.js", "text/javascript");
+    // });
+
+    // server.on("/slider.js", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //     request->send(SPIFFS, "/slider.js", "text/javascript");
+    // });
+
+    // server.on("/assets/humidity.svg", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //     request->send(SPIFFS, "/assets/humidity.svg", "text/svg");
+    // });
+
+    // server.on("/assets/temperature.svg", HTTP_GET, [](AsyncWebServerRequest *request) {
+    //     request->send(SPIFFS, "/assets/temperature.svg", "text/svg");
+    // });
 
     server.on("/humidifier/on", HTTP_POST, [](AsyncWebServerRequest *request) {
         digitalWrite(humidifier, HIGH);
@@ -97,6 +113,8 @@ void setup() {
     server.on("/humidity/state", HTTP_GET, [](AsyncWebServerRequest *request) {
         request->send(200, "text/plain", chr_humidity);
     });
+
+    server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
 
     server.begin();
 }
