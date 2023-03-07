@@ -1,6 +1,11 @@
 .slidecontainer {
   margin-top: 10px;
-  width: 100%;
+}
+
+@media screen and (max-width: 1000px) {
+  .slidecontainer {
+    width: 80vw;
+  }
 }
 
 .slidecontainer label {

@@ -24,7 +24,7 @@
     <div class="toggle-container">
       <div>
         <div class="flex-row">
-          <img src="./assets/temperature.svg" class="header-icon svg-on" />
+          <img src="./assets/temperature.svg" id="heater-state-icon" class="header-icon svg-off" name="heater" state="false"/>
           <h2>Heater</h2>
         </div>
         <div class="slidecontainer">
@@ -32,43 +32,25 @@
               id="selected-temp"></span>&#8451;):</label>
           <input type="range" min="15" max="30" value="22" class="slider" id="temperature-slider">
           <label for="heater-hyst-slider" class="slider-label">Set hysteresis (<span
-              id="selected-hyst-temp"></span>%):</label>
+              id="selected-hyst-temp"></span>&#8451;):</label>
           <input type="range" min="1" max="8" value="2" class="slider" id="temperature-hyst-slider">
         </div>
       </div>
       <div>
         <div class="flex-row">
-          <img src="./assets/humidity.svg" class="header-icon svg-off" />
+          <img src="./assets/humidity.svg" id="dehumidifier-state-icon" class="header-icon svg-off" name="dehumidifier" state="false"/>
           <h2>Dehumidifier</h2>
         </div>
         <div class="slidecontainer">
           <label for="humidity-slider" class="slider-label">Set humidity (<span id="selected-hum"></span>%):</label>
-          <input type="range" min="10" max="80" value="40" class="slider" id="humidity-slider">
+          <input type="range" min="10" max="80" value="50" class="slider" id="humidity-slider">
           <label for="humidity-hyst-slider" class="slider-label">Set hysteresis (<span
               id="selected-hyst-hum"></span>%):</label>
           <input type="range" min="1" max="8" value="2" class="slider" id="humidity-hyst-slider">
         </div>
       </div>
     </div>
-
-    <!-- <div class="toggle-container">
-      <div>
-        <p>Heater</p>
-        <label for="heater" class="switch">
-          <input type="checkbox" name="heater" id="heater">
-          <span class="slider round"></span>
-        </label>
-      </div>
-      <div>
-        <p>Dehumidifier</p>
-        <label for="humidifier" class="switch">
-          <input type="checkbox" name="humidifier" id="humidifier">
-          <span class="slider round"></span>
-        </label>
-      </div>
-    </div> -->
   </div>
-
 </body>
 
 </html>
