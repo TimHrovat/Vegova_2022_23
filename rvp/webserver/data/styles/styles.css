@@ -62,3 +62,7 @@ h2 {
   display: flex;
   align-items: center;
 }
+
+.relative {
+  position: relative;
+}
