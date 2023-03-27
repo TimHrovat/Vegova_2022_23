@@ -11,8 +11,8 @@
 #define default_temp 22
 #define default_hum 50
 
-const char *ssid = "Tenda_1BD460";
-const char *pass = "T48mgVEf";
+const char *ssid = "Vegova RVP4";
+const char *pass = "Vegova_RVP4";
 
 float humidity;
 float temperature;

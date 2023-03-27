@@ -124,7 +124,6 @@ function boxBlur(data, imgWidth, matrix, div) {
         return el.map((value, x) => {
             const edgeOffset = (matrix.length - 1) / 2;
             if (
-                // TODO: fix width / heights
                 y + edgeOffset >= objectArr.length - 1 ||
                 x + edgeOffset >= el.length - 1 ||
                 x < edgeOffset ||
