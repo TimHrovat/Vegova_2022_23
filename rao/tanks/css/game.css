@@ -1,0 +1,57 @@
+.current-score-container {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+}
+
+.current-score-container > div {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5px;
+}
+
+.current-score-container > div > div:nth-child(2) {
+  margin-left: 20px;
+  color: orange;
+}
+
+#pause-menu-container,
+#lose {
+  text-align: center;
+  background-color: rgb(17, 17, 17);
+  padding: 20px 30px;
+  border-spacing: 0 1em;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  flex-direction: column;
+}
+
+#pause-menu-container h1,
+#lose h1 {
+  margin-bottom: 20px;
+}
+
+#pause-menu-container > div,
+#lose > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.pause-menu-button {
+  border-radius: 8px;
+  background-color: rgb(38, 38, 38);
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.pause-menu-button:hover {
+  background-color: orange;
+  color: rgb(17, 17, 17);
+}
+
+#lose h1 {
+  color: red;
+}

@@ -2,7 +2,7 @@ import { Bullet } from "./bullet.js";
 import { ctx } from "../game.js";
 
 export class Tank {
-  constructor(x, y, hp, color) {
+  constructor(x, y, hp, color, velocity) {
     // position & size
     this.x = x;
     this.y = y;
@@ -10,15 +10,17 @@ export class Tank {
     // speed & velocity
     this.speedX = 0;
     this.speedY = 0;
-    this.velocity = 6;
+    this.velocity = velocity;
 
-    this.hp = hp;
+    this.maxHp = hp;
+    this.currentHp = hp;
     this.color = color;
 
     // cannon
     this.cannonAngle = 0;
     this.cannonWidth = 15;
     this.cannonHeight = 45;
+
     // bullet
     this.bullets = [];
   }
@@ -70,11 +72,35 @@ export class Tank {
     ctx.rotate(this.cannonAngle);
     ctx.fillRect(-this.cannonWidth / 2, 0, this.cannonWidth, this.cannonHeight);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    //health bar background
+    ctx.beginPath();
+    ctx.fillStyle = "black";
+    ctx.fillRect(
+      this.x - this.radius,
+      this.y - this.radius - 25,
+      this.radius * 2,
+      8
+    );
+
+    //health bar value
+    ctx.fillStyle = "green";
+    ctx.fillRect(
+      this.x - this.radius,
+      this.y - this.radius - 25,
+      ((this.radius * 2) / this.maxHp) * this.currentHp,
+      8
+    );
   }
 
   shoot() {
     this.bullets.push(
       new Bullet(this.x, this.y, this.cannonAngle + Math.PI / 2, 25)
     );
+  }
+
+  movementZero() {
+    this.speedX = 0;
+    this.speedY = 0;
   }
 }

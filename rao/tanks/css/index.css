@@ -1,0 +1,58 @@
+.center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.main-menu h1 {
+  font-size: 2rem;
+  margin-bottom: 40px;
+}
+
+.main-menu .link {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 1.2rem;
+  height: 1.4rem;
+  cursor: pointer;
+}
+
+.main-menu .link:hover {
+  color: orange;
+  font-size: 1.4rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.main-menu form input {
+  background-color: rgb(17, 17, 17);
+  border: none;
+  outline: none;
+  padding: 10px 30px;
+  width: 250px;
+  margin-bottom: 30px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.error::placeholder {
+  color: red;
+  opacity: 1;
+}
+
+.error:-webkit-input-placeholder {
+  color: red;
+  opacity: 1;
+}
+.error:-moz-placeholder {
+  color: red;
+  opacity: 1;
+}
+.error:-ms-input-placeholder {
+  color: red;
+  opacity: 1;
+}

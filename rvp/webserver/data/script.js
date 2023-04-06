@@ -1,19 +1,27 @@
 const temp_el = document.getElementById("temp-state");
 const hum_el = document.getElementById("humidity-state");
-const heater = document.getElementById("heater");
-const humidifier = document.getElementById("humidifier");
+const heater_state_icon = document.getElementById("heater-state-icon");
+const dehumidifier_state_icon = document.getElementById(
+  "dehumidifier-state-icon"
+);
 
-heater.addEventListener("change", setEventListener);
-humidifier.addEventListener("change", setEventListener);
+heater_state_icon.addEventListener("click", setEventListener);
+dehumidifier_state_icon.addEventListener("click", setEventListener);
 
 function setEventListener(e) {
   e.preventDefault();
-  const currentState = e.target.checked;
+  const currentState = e.target.getAttribute("state");
 
-  if (currentState) {
+  if (currentState === "false") {
     setDevice(e.target.name, "on");
+    e.target.setAttribute("state", true);
+    e.target.classList.add("svg-on");
+    e.target.classList.remove("svg-off");
   } else {
     setDevice(e.target.name, "off");
+    e.target.setAttribute("state", false);
+    e.target.classList.add("svg-off");
+    e.target.classList.remove("svg-on");
   }
 }
 
@@ -25,8 +33,15 @@ async function checkDeviceState(name, toggleElement) {
   const device = await fetch("/" + name + "/state", { method: "GET" });
   const state = await device.text();
 
-  if (state === "OFF") toggleElement.checked = false;
-  else if (state === "ON") toggleElement.checked = true;
+  if (state === "OFF") {
+    toggleElement.classList.add("svg-off");
+    toggleElement.classList.remove("svg-on");
+    toggleElement.setAttribute("state", false);
+  } else if (state === "ON") {
+    toggleElement.classList.add("svg-on");
+    toggleElement.classList.remove("svg-off");
+    toggleElement.setAttribute("state", true);
+  }
 }
 
 async function updateTemp() {
@@ -34,7 +49,6 @@ async function updateTemp() {
   const state = await sensor.text();
 
   temp_el.innerHTML = "Temperature: " + toFloat(state) + "&#8451;";
-  console.log(state);
 }
 
 async function updateHum() {
@@ -42,7 +56,6 @@ async function updateHum() {
   const state = await sensor.text();
 
   hum_el.innerHTML = "Humidity: " + toFloat(state) + "%";
-  console.log(state);
 }
 
 function toFloat(str) {
@@ -52,12 +65,12 @@ function toFloat(str) {
 
 updateTemp();
 updateHum();
-checkDeviceState("humidifier", humidifier);
-checkDeviceState("heater", heater);
+checkDeviceState("dehumidifier", dehumidifier_state_icon);
+checkDeviceState("heater", heater_state_icon);
 
 setInterval(() => {
   updateTemp();
   updateHum();
-  checkDeviceState("humidifier", humidifier);
-  checkDeviceState("heater", heater);
+  checkDeviceState("dehumidifier", dehumidifier_state_icon);
+  checkDeviceState("heater", heater_state_icon);
 }, 5000);

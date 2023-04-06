@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/imports.css" />
+    <script type="module" src="../js/other/index.js" defer></script>
+    <script type="module" src="../js/other/menu_audio.js" defer></script>
+    <script src="../js/other/scoreboard.js" defer></script>
+    <script type="module" src="../js/other/settings.js" defer></script>
+    <script type="module" src="../js/other/index_buttons.js" defer></script>
+    <title>Game of Tanks</title>
+</head>
+
+<body>
+    <div id="main-menu" class="center main-menu">
+        <h1>Game of Tanks</h1>
+        <form>
+            <input type="text" id="name" placeholder="Enter name" maxLength="40" required />
+        </form>
+        <a href="game.html" id="a-play" class="link">Play</a>
+        <a class="link" id="show-scoreboard">Scoreboard</a>
+        <a class="link" id="show-settings">Settings</a>
+    </div>
+    <div id="scoreboard" class="center main-menu hidden">
+        <h1>Scoreboard</h1>
+        <table id="scores-container">
+        </table>
+        <button class="back-button show-main-menu">Return</button>
+    </div>
+    <div id="settings" class="center main-menu hidden">
+        <h1>Settings</h1>
+        <div id="settings-container">
+            <h2>sound</h2>
+            <input type="range" id="volume-slider">
+            <h2>player movement</h2>
+            <table id="controls-container"></table>
+        </div>
+        <button class="back-button show-main-menu">Return</button>
+    </div>
+</body>
+
+</html>
