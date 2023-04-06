@@ -19,18 +19,80 @@ window.onload = function () {
     //   enhanceColorChannel(data, { red: false, green: false, blue: false });
     //   setBrightness(data, 0.8);
 
-    boxBlur(
-        data,
-        img.naturalWidth,
-        [
-            [1, 2, 1],
-            [2, 4, 2],
-            [1, 2, 1],
-        ],
-        16
-    );
+    // applyBlur(
+    //     data,
+    //     img.naturalWidth,
+    //     [
+    //         [1, 2, 1],
+    //         [2, 4, 2],
+    //         [1, 2, 1],
+    //     ],
+    //     16
+    // );
+
+    // const appliedMatrix = applyMatrix(data, img.naturalWidth, [
+    //     [0, 1, 0],
+    //     [1, -4, 1],
+    //     [0, 1, 0],
+    // ]);
+
+    const sharpenedImg = unsharpMasking(data, img.naturalWidth);
+
+    convertToOriginal(sharpenedImg, data);
 
     ctx.putImageData(imgData, 0, 0);
+
+    // chart
+
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        title: {
+            text: "Histogram",
+        },
+        axisX: {
+            title: "Buckets",
+        },
+        axisY: {
+            title: "Histogram",
+            titleFontColor: "#4F81BC",
+            lineColor: "#4F81BC",
+            labelFontColor: "#4F81BC",
+            tickColor: "#4F81BC",
+        },
+        data: [
+            {
+                type: "column",
+                name: "red",
+                legendText: "red",
+                color: "red",
+                showInLegend: true,
+                dataPoints: generateBucketsByColor(data, img.naturalWidth, 5)[
+                    "R"
+                ],
+            },
+            {
+                type: "column",
+                name: "green",
+                legendText: "green",
+                color: "green",
+                showInLegend: true,
+                dataPoints: generateBucketsByColor(data, img.naturalWidth, 5)[
+                    "G"
+                ],
+            },
+            {
+                type: "column",
+                name: "blue",
+                legendText: "blue",
+                color: "blue",
+                showInLegend: true,
+                dataPoints: generateBucketsByColor(data, img.naturalWidth, 5)[
+                    "B"
+                ],
+            },
+        ],
+    });
+    chart.render();
 };
 
 function setGrayscale(data) {
@@ -115,10 +177,8 @@ function convertToOriginal(objectArr, data) {
     });
 }
 
-function boxBlur(data, imgWidth, matrix, div) {
+function applyBlur(data, imgWidth, matrix, div) {
     let objectArr = convertTo2D(data, imgWidth);
-
-    console.log(objectArr);
 
     const arr = objectArr.map((el, y) => {
         return el.map((value, x) => {
@@ -143,13 +203,198 @@ function boxBlur(data, imgWidth, matrix, div) {
                 });
             });
 
-            color.R /= div;
-            color.G /= div;
-            color.B /= div;
+            for (const [key, value] of Object.entries(color)) {
+                if (key === "A") continue;
+
+                color[key] = Math.floor(value / div);
+            }
 
             return color;
         });
     });
 
-    convertToOriginal(arr, data);
+    return arr;
+}
+
+function applyMatrix(data, imgWidth, matrix) {
+    let objectArr = convertTo2D(data, imgWidth);
+
+    const arr = objectArr.map((el, y) => {
+        return el.map((value, x) => {
+            const edgeOffset = (matrix.length - 1) / 2;
+            if (
+                y + edgeOffset >= objectArr.length - 1 ||
+                x + edgeOffset >= el.length - 1 ||
+                x < edgeOffset ||
+                y < edgeOffset
+            )
+                return value;
+
+            const color = { R: 0, G: 0, B: 0, A: 255 };
+
+            matrix.forEach((m, my) => {
+                m.forEach((mult, mx) => {
+                    const pixel =
+                        objectArr[y + my - edgeOffset][x + mx - edgeOffset];
+
+                    const brightness =
+                        0.299 * pixel.R + 0.587 * pixel.G + 0.114 * pixel.B;
+                    const val = brightness * mult;
+
+                    color.R += val;
+                    color.G += val;
+                    color.B += val;
+                });
+            });
+
+            for (const [key, value] of Object.entries(color)) {
+                if (key === "A") continue;
+
+                color[key] = Math.floor(value);
+
+                if (value > 255) color[key] = 255;
+                else if (value < 0) color[key] = 0;
+            }
+
+            return color;
+        });
+    });
+
+    return arr;
+}
+
+function sharpening(data, imgWidth) {
+    const laplaceOperator = [
+        [0, 1, 0],
+        [1, -4, 1],
+        [0, 1, 0],
+    ];
+
+    const originalImg = convertTo2D(data, imgWidth);
+    const appliedLaplace = applyMatrix(data, imgWidth, laplaceOperator);
+
+    const output = subtractImages(originalImg, appliedLaplace);
+
+    return output;
+}
+
+function unsharpMasking(data, imgWidth) {
+    const gaussian = [
+        [1, 2, 1],
+        [2, 4, 2],
+        [1, 2, 1],
+    ];
+
+    const originalImg = convertTo2D(data, imgWidth);
+    const appliedBlur = applyBlur(data, imgWidth, gaussian, 16);
+
+    const substitution = subtractImages(originalImg, appliedBlur);
+
+    const output = sumImages(originalImg, substitution);
+
+    return output;
+}
+
+function subtractImages(img1, img2) {
+    const output = [];
+
+    for (let i = 0; i < img1.length; i++) {
+        output.push([]);
+
+        for (let j = 0; j < img1[i].length; j++) {
+            const color = { R: 0, G: 0, B: 0, A: 255 };
+
+            for (const [key, value] of Object.entries(color)) {
+                if (key === "A") continue;
+
+                color[key] = img1[i][j][key] - img2[i][j][key];
+
+                if (color[key] > 255) color[key] = 255;
+                else if (color[key] < 0) color[key] = 0;
+            }
+
+            output[i].push(color);
+        }
+    }
+
+    return output;
+}
+
+function sumImages(img1, img2) {
+    const output = [];
+
+    for (let i = 0; i < img1.length; i++) {
+        output.push([]);
+
+        for (let j = 0; j < img1[i].length; j++) {
+            const color = { R: 0, G: 0, B: 0, A: 255 };
+
+            for (const [key, value] of Object.entries(color)) {
+                if (key === "A") continue;
+
+                color[key] = img1[i][j][key] + img2[i][j][key];
+
+                if (color[key] > 255) color[key] = 255;
+                else if (color[key] < 0) color[key] = 0;
+            }
+
+            output[i].push(color);
+        }
+    }
+
+    return output;
+}
+
+function generateBucketsByColor(data, imgWidth, numOfBuckets, colorKey) {
+    const originalImg = convertTo2D(data, imgWidth);
+
+    const bucketSize = 255 / numOfBuckets;
+
+    if (Math.floor(bucketSize) !== bucketSize) {
+        alert("Invalid num of buckets");
+        return;
+    }
+
+    const buckets = { R: [], G: [], B: [] };
+
+    for (let k = 0; k < numOfBuckets; k++) {
+        const startVal = k === 0 ? bucketSize * k : bucketSize * k + 1;
+        const endVal = startVal + bucketSize - 1;
+
+        const valCount = { R: 0, G: 0, B: 0 };
+
+        for (let i = 0; i < originalImg.length; i++) {
+            for (let j = 0; j < originalImg[i].length; j++) {
+                if (
+                    originalImg[i][j]["R"] >= startVal &&
+                    originalImg[i][j]["R"] <= endVal
+                )
+                    valCount.R++;
+
+                if (
+                    originalImg[i][j]["G"] >= startVal &&
+                    originalImg[i][j]["G"] <= endVal
+                )
+                    valCount.G++;
+
+                if (
+                    originalImg[i][j]["B"] >= startVal &&
+                    originalImg[i][j]["B"] <= endVal
+                )
+                    valCount.B++;
+            }
+        }
+
+        for (const [key, value] of Object.entries(buckets)) {
+            buckets[key].push({
+                label: `${startVal}-${endVal}`,
+                y: valCount[key],
+                x: k,
+            });
+        }
+
+        console.log(buckets);
+    }
+
+    return buckets;
 }
