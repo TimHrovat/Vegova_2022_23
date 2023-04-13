@@ -6,15 +6,72 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="script.js" defer></script>
+    <script type="module" src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-    <img id="pic" src="hello.jpg" alt="The Scream">
-    <canvas id="canvas" width="500" height="500"></canvas>
 
-    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <div class="container">
+        <input type="file" id="file-input" class="mb-3" /><br />
+        <div class="flex gap-1 mb-3">
+            <img id="pic">
+            <div id="final-img" class="hidden"></div>
+            <div id="loader" class="hidden">
+                <div class="lds-ring">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-container hidden">
+            <div class="flex gap-3">
+                <div>
+                    <div class="filter-section">
+                        <h1>Other</h1>
+                        <div class="flex gap-1 mb-3">
+                            <button class="apply-filter-button btn-default" data-fname="grayscale">Grayscale</button>
+                            <button class="apply-filter-button btn-default" data-fname="threshold">Threshold</button>
+                            <button class="apply-filter-button btn-default" data-fname="box-blur">Box blur</button>
+                            <button class="apply-filter-button btn-default" data-fname="sharpening">Sharpening</button>
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <h1>Remove color channel</h1>
+                        <div class="flex gap-1 mb-3">
+                            <button class="apply-filter-button btn-default" data-fname="rc-red">Red</button>
+                            <button class="apply-filter-button btn-default" data-fname="rc-green">Green</button>
+                            <button class="apply-filter-button btn-default" data-fname="rc-blue">Blue</button>
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <h1>Enhance color channel</h1>
+                        <div class="flex gap-1 mb-3">
+                            <button class="apply-filter-button btn-default" data-fname="ec-red">Red</button>
+                            <button class="apply-filter-button btn-default" data-fname="ec-green">Green</button>
+                            <button class="apply-filter-button btn-default" data-fname="ec-blue">Blue</button>
+                        </div>
+                    </div>
+                    <button id="btn-undo" class="btn-primary mb-3">Remove last</button>
+                    <button id="btn-remove-all" class="btn-primary mb-3">Remove All</button><br />
+                    <button id="btn" class="btn-primary">Apply</button>
+                </div>
+                <div>
+                    <h1>Filter stack (<span id="filter-cnt">0</span>)</h1>
+                    <div id="stack-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="chart-container"></div>
+    </div>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
 </body>
 
 </html>
