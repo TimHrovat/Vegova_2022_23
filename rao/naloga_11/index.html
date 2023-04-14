@@ -37,6 +37,8 @@
                             <button class="apply-filter-button btn-default" data-fname="threshold">Threshold</button>
                             <button class="apply-filter-button btn-default" data-fname="box-blur">Box blur</button>
                             <button class="apply-filter-button btn-default" data-fname="sharpening">Sharpening</button>
+                            <button class="apply-filter-button btn-default" data-fname="unsharp-masking">Unsharp masking</button>
+                            <button class="apply-filter-button btn-default" data-fname="laplacian">Laplacian</button>
                         </div>
                     </div>
                     <div class="filter-section">
@@ -53,6 +55,12 @@
                             <button class="apply-filter-button btn-default" data-fname="ec-red">Red</button>
                             <button class="apply-filter-button btn-default" data-fname="ec-green">Green</button>
                             <button class="apply-filter-button btn-default" data-fname="ec-blue">Blue</button>
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <h1>Brightness (<span id="brightness-val">1</span>)</h1>
+                        <div class="flex gap-1 mb-3">
+                            <input type="range" id="brightness-input" name="brightness" default="1" min="0" max="2" step="0.01"/>
                         </div>
                     </div>
                     <button id="btn-undo" class="btn-primary mb-3">Remove last</button>

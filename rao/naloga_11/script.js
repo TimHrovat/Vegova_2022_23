@@ -21,6 +21,7 @@ const img = document.getElementById("pic");
 const finalImg = document.getElementById("final-img");
 const applyBtn = document.getElementById("btn");
 const btnUndo = document.getElementById("btn-undo");
+const brightnessInput = document.getElementById("brightness-input");
 const btnRemoveAll = document.getElementById("btn-remove-all");
 const filterButtons = document.querySelectorAll(".apply-filter-button");
 const stackContainer = document.getElementById("stack-container");
@@ -28,9 +29,15 @@ let stack = [];
 
 fileInput.addEventListener("change", (e) => {
     img.src = URL.createObjectURL(e.target.files[0]);
+    finalImg.src = "";
     document
         .getElementsByClassName("filter-container")[0]
         .classList.remove("hidden");
+});
+
+brightnessInput.addEventListener("change", (e) => {
+    const span = document.getElementById("brightness-val");
+    span.innerHTML = e.target.value;
 });
 
 filterButtons.forEach((filterButton) => {
@@ -108,18 +115,16 @@ applyBtn.addEventListener("click", () => {
 
 function showLoader() {
     const loader = document.getElementById("loader");
-    loader.style.width=`${img.width}px`;
-    loader.style.height=`${img.height}px`;
+    loader.style.width = `${img.width}px`;
+    loader.style.height = `${img.height}px`;
     loader.classList.remove("hidden");
     loader.classList.add("block");
-    console.log("show");
 }
 
 function hideLoader() {
     const loader = document.getElementById("loader");
     loader.classList.add("hidden");
     loader.classList.remove("block");
-    console.log("hide");
 }
 
 function updateFilterCount() {
@@ -153,6 +158,10 @@ function applyFilters(data, width) {
                 const sharpenedImg = sharpening(data, img.naturalWidth);
                 convertToOriginal(sharpenedImg, data);
                 break;
+            case "unsharp-masking":
+                const unsharpedImg = unsharpMasking(data, img.naturalWidth);
+                convertToOriginal(unsharpedImg, data);
+                break;
             case "rc-red":
             case "rc-green":
             case "rc-blue":
@@ -171,8 +180,18 @@ function applyFilters(data, width) {
                     blue: el.split("-")[1] === "blue" ? true : false,
                 });
                 break;
+            case "laplacian":
+                const appliedMatrix = applyMatrix(data, img.naturalWidth, [
+                    [0, 1, 0],
+                    [1, -4, 1],
+                    [0, 1, 0],
+                ]);
+                convertToOriginal(appliedMatrix, data);
+                break;
         }
     });
+
+    setBrightness(data, Number(brightnessInput.value));
 }
 
 //       setGrayscale(data);
