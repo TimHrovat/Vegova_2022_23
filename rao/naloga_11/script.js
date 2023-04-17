@@ -188,6 +188,19 @@ function applyFilters(data, width) {
                 ]);
                 convertToOriginal(appliedMatrix, data);
                 break;
+            case "sobel":
+                const sobelLeft = applyMatrix(data, img.naturalWidth, [
+                    [-1, 0, 1],
+                    [-2, 0, 2],
+                    [-1, 0, 1],
+                ]);
+                const sobelUp = applyMatrix(data, img.naturalWidth, [
+                    [-1, -2, -1],
+                    [0, 0, 0],
+                    [1, 2, 1],
+                ]);
+                convertToOriginal(sumImages(sobelLeft, sobelUp), data);
+                break;
         }
     });
 
