@@ -10,10 +10,77 @@ const btnRemoveAll = document.getElementById("btn-remove-all");
 const filterButtons = document.querySelectorAll(".apply-filter-button");
 const btnRemoveRect = document.getElementById("btn-remove-rect");
 const stackContainer = document.getElementById("stack-container");
+const matrixInput = document.getElementById("matrix-input");
 let stack = [];
 let x, y, oldx, oldy;
 let showDrag = false;
 let useRect = true;
+
+matrixInput.addEventListener("change", (e) => {
+    const matrixContainer = document.getElementById("matrix-container");
+
+    if (e.currentTarget.value % 2 !== 1) {
+        return;
+    }
+
+    while (matrixContainer.firstChild) {
+        matrixContainer.removeChild(matrixContainer.lastChild);
+    }
+
+    const table = document.createElement("table");
+    table.classList.add("mb-3");
+
+    for (let i = 0; i < Number(e.currentTarget.value); i++) {
+        const tr = document.createElement("tr");
+        for (let j = 0; j < Number(e.currentTarget.value); j++) {
+            const td = document.createElement("td");
+            const input = document.createElement("input");
+
+            input.classList.add("matrix-field");
+            input.type = "number";
+
+            td.appendChild(input);
+            tr.appendChild(td);
+        }
+        table.appendChild(tr);
+    }
+
+    matrixContainer.appendChild(table);
+
+    const btn = document.createElement("btn");
+
+    btn.classList.add("btn-default", "mb-3");
+    btn.innerHTML = "apply matrix";
+
+    btn.addEventListener("click", () => {
+        let table = matrixContainer.firstChild;
+
+        const matrixArray = [];
+
+        for (let i = 0, row; (row = table.rows[i]); i++) {
+            matrixArray.push([]);
+            for (let j = 0, col; (col = row.cells[j]); j++) {
+                if (col.firstChild.value === "") {
+                    return;
+                }
+                matrixArray[i].push(Number(col.firstChild.value));
+            }
+        }
+
+        const stackItem = {
+            name: "custom-matrix",
+            customMatrix: matrixArray,
+        };
+
+        stack.push(stackItem);
+        const stackElement = document.createElement("div");
+        stackElement.innerHTML = stack.length + " - custom matrix";
+        stackContainer.appendChild(stackElement);
+        updateFilterCount();
+    });
+
+    matrixContainer.appendChild(btn);
+});
 
 window.addEventListener("load", () => {
     let bbox = document.getElementById("bbox");
@@ -42,7 +109,12 @@ brightnessInput.addEventListener("change", (e) => {
 
 filterButtons.forEach((filterButton) => {
     filterButton.addEventListener("click", (e) => {
-        stack.push(e.target.getAttribute("data-fname"));
+        const stackItem = {
+            name: e.target.getAttribute("data-fname"),
+            customMatrix: null,
+        };
+
+        stack.push(stackItem);
         const stackElement = document.createElement("div");
         stackElement.innerHTML =
             stack.length + " - " + e.target.getAttribute("data-fname");

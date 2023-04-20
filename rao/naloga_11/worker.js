@@ -18,7 +18,7 @@ onmessage = (e) => {
     let brightness = e.data[2];
 
     e.data[3].forEach((el) => {
-        switch (el) {
+        switch (el["name"]) {
             case "grayscale":
                 setGrayscale(data);
                 break;
@@ -50,18 +50,18 @@ onmessage = (e) => {
             case "rc-green":
             case "rc-blue":
                 removeColorChannels(data, {
-                    red: el.split("-")[1] === "red" ? true : false,
-                    green: el.split("-")[1] === "green" ? true : false,
-                    blue: el.split("-")[1] === "blue" ? true : false,
+                    red: el["name"].split("-")[1] === "red" ? true : false,
+                    green: el["name"].split("-")[1] === "green" ? true : false,
+                    blue: el["name"].split("-")[1] === "blue" ? true : false,
                 });
                 break;
             case "ec-red":
             case "ec-green":
             case "ec-blue":
                 enhanceColorChannel(data, {
-                    red: el.split("-")[1] === "red" ? true : false,
-                    green: el.split("-")[1] === "green" ? true : false,
-                    blue: el.split("-")[1] === "blue" ? true : false,
+                    red: el["name"].split("-")[1] === "red" ? true : false,
+                    green: el["name"].split("-")[1] === "green" ? true : false,
+                    blue: el["name"].split("-")[1] === "blue" ? true : false,
                 });
                 break;
             case "laplacian":
@@ -85,6 +85,10 @@ onmessage = (e) => {
                 ]);
                 convertToOriginal(sumImages(sobelLeft, sobelUp), data);
                 break;
+            case "custom-matrix":
+                const matrix = applyMatrix(data, width, el["customMatrix"]);
+                convertToOriginal(matrix, data);
+                break;
         }
     });
 
@@ -93,4 +97,4 @@ onmessage = (e) => {
     postMessage(data);
 };
 
-export {}
+export {};
