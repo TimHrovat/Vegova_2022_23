@@ -18,6 +18,7 @@ h1 {
 img {
     max-width: 45vw;
     min-width: 200px;
+    max-height: 32rem;
 }
 
 body {
@@ -136,6 +137,27 @@ input[type="file"] {
 
 .btn-primary:hover {
     background: #0d45a5;
+}
+
+.btn-outline-error {
+    background-color: transparent;
+    background: transparent;
+    padding: 8px 16px;
+    border-radius: 10px;
+    color: red;
+    border: none;
+    outline: 2px solid red;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.mr-5px {
+    margin-right: 5px;
+}
+
+.btn-outline-error:hover {
+    background: red;
+    color: #282828;
 }
 
 .btn-default {
@@ -265,4 +287,17 @@ input[type=range] {
   }
   input[type=range]:focus::-ms-fill-upper {
     background: #373636;
+  }
+
+  div.focus-image {
+    display:inline-block;
+    position:relative;
+    cursor:pointer;
+  }
+  div.focus-image div {
+    display:none;
+    border:2px solid red;
+    position:absolute;
+    left:90px;
+    top:60px;
   }

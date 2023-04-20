@@ -1,19 +1,3 @@
-import {
-    setGrayscale,
-    setTreshold,
-    removeColorChannels,
-    enhanceColorChannel,
-    setBrightness,
-    convertTo2D,
-    convertToOriginal,
-    applyBlur,
-    applyMatrix,
-    sharpening,
-    unsharpMasking,
-    subtractImages,
-    sumImages,
-    generateBucketsByColor,
-} from "./functions.js";
 import { updateChart } from "./chart.js";
 
 const fileInput = document.getElementById("file-input");
@@ -24,15 +8,31 @@ const btnUndo = document.getElementById("btn-undo");
 const brightnessInput = document.getElementById("brightness-input");
 const btnRemoveAll = document.getElementById("btn-remove-all");
 const filterButtons = document.querySelectorAll(".apply-filter-button");
+const btnRemoveRect = document.getElementById("btn-remove-rect");
 const stackContainer = document.getElementById("stack-container");
 let stack = [];
+let x, y, oldx, oldy;
+let showDrag = false;
+let useRect = true;
+
+window.addEventListener("load", () => {
+    let bbox = document.getElementById("bbox");
+    bbox.style.display = "none";
+    btnRemoveRect.style.display = "none";
+});
+
+btnRemoveRect.addEventListener("click", () => {
+    resetRectSelect();
+});
 
 fileInput.addEventListener("change", (e) => {
     img.src = URL.createObjectURL(e.target.files[0]);
     finalImg.src = "";
-    document
-        .getElementsByClassName("filter-container")[0]
-        .classList.remove("hidden");
+    const fileContainer =
+        document.getElementsByClassName("filter-container")[0];
+    fileContainer.classList.remove("hidden");
+    fileContainer.classList.add("source_provided");
+    resetRectSelect();
 });
 
 brightnessInput.addEventListener("change", (e) => {
@@ -65,7 +65,7 @@ btnUndo.addEventListener("click", () => {
     updateFilterCount();
 });
 
-applyBtn.addEventListener("click", () => {
+applyBtn.addEventListener("click", async () => {
     if (img.src === "") return;
 
     if (finalImg.lastChild) finalImg.removeChild(finalImg.lastChild);
@@ -77,41 +77,93 @@ applyBtn.addEventListener("click", () => {
     showLoader();
     applyBtn.disabled = true;
 
-    setTimeout(() => {
+    await useWorker();
+});
+
+async function useWorker() {
+    new Promise((resolve, reject) => {
         const tmpCanvas = document.createElement("canvas");
         const tmpCtx = tmpCanvas.getContext("2d");
 
-        tmpCanvas.height = img.naturalHeight;
-        tmpCanvas.width = img.naturalWidth;
+        let tmpOldx = oldx;
+        let tmpOldy = oldy;
+        let tmpx = x;
+        let tmpy = y;
 
-        tmpCtx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
+        if (tmpOldx > tmpx) {
+            let tmp = tmpOldx;
+            tmpOldx = tmpx;
+            tmpx = tmp;
+        }
+
+        if (tmpOldy > tmpy) {
+            let tmp = tmpOldy;
+            tmpOldy = tmpy;
+            tmpy = tmp;
+        }
+
+        tmpOldx -= 29;
+        tmpOldy -= 100;
+        tmpx -= 29;
+        tmpy -= 100;
+
+        const ratioH = img.naturalHeight / img.height;
+        const ratioW = img.naturalWidth / img.width;
+
+        tmpCanvas.height = useRect
+            ? Math.floor((tmpy - tmpOldy) * ratioH)
+            : img.naturalHeight;
+        tmpCanvas.width = useRect
+            ? Math.floor((tmpx - tmpOldx) * ratioW)
+            : img.naturalWidth;
+
+        tmpCtx.drawImage(
+            img,
+            useRect ? Math.floor(tmpOldx * ratioW) : 0,
+            useRect ? Math.floor(tmpOldy * ratioH) : 0,
+            tmpCanvas.width,
+            tmpCanvas.height,
+            0,
+            0,
+            tmpCanvas.width,
+            tmpCanvas.height
+        );
 
         const imgData = tmpCtx.getImageData(
             0,
             0,
-            img.naturalWidth,
-            img.naturalHeight
+            tmpCanvas.width,
+            tmpCanvas.height
         ); //podatki o sliki
-        const data = imgData.data;
 
-        applyFilters(data, img.naturalWidth);
+        const worker = new Worker("worker.js", { type: "module" });
 
-        tmpCtx.putImageData(imgData, 0, 0);
+        worker.postMessage([
+            imgData.data,
+            useRect ? Math.floor((tmpx - tmpOldx) * ratioW) : img.naturalWidth,
+            brightnessInput.value,
+            stack,
+        ]);
 
-        var image = new Image();
-        image.id = "pic2";
-        image.src = tmpCanvas.toDataURL();
-        finalImg.appendChild(image);
+        worker.onmessage = (e) => {
+            imgData.data.set(e.data);
 
-        updateChart(data, img.naturalWidth);
+            tmpCtx.putImageData(imgData, 0, 0);
 
-        document.getElementById("loader").setAttribute("attr", "hidden");
+            const image = new Image();
+            image.src = tmpCanvas.toDataURL();
+            finalImg.appendChild(image);
 
-        applyBtn.disabled = false;
-        hideLoader();
-        finalImg.classList.remove("hidden");
-    }, 1);
-});
+            updateChart(imgData.data, tmpCanvas.width);
+
+            document.getElementById("loader").setAttribute("attr", "hidden");
+
+            applyBtn.disabled = false;
+            hideLoader();
+            finalImg.classList.remove("hidden");
+        };
+    });
+}
 
 function showLoader() {
     const loader = document.getElementById("loader");
@@ -132,103 +184,53 @@ function updateFilterCount() {
     span.innerHTML = stack.length;
 }
 
-function applyFilters(data, width) {
-    stack.forEach((el) => {
-        switch (el) {
-            case "grayscale":
-                setGrayscale(data);
-                break;
-            case "threshold":
-                setTreshold(data, 128);
-                break;
-            case "box-blur":
-                const blur = applyBlur(
-                    data,
-                    img.naturalWidth,
-                    [
-                        [1, 2, 1],
-                        [2, 4, 2],
-                        [1, 2, 1],
-                    ],
-                    16
-                );
-                convertToOriginal(blur, data);
-                break;
-            case "sharpening":
-                const sharpenedImg = sharpening(data, img.naturalWidth);
-                convertToOriginal(sharpenedImg, data);
-                break;
-            case "unsharp-masking":
-                const unsharpedImg = unsharpMasking(data, img.naturalWidth);
-                convertToOriginal(unsharpedImg, data);
-                break;
-            case "rc-red":
-            case "rc-green":
-            case "rc-blue":
-                removeColorChannels(data, {
-                    red: el.split("-")[1] === "red" ? true : false,
-                    green: el.split("-")[1] === "green" ? true : false,
-                    blue: el.split("-")[1] === "blue" ? true : false,
-                });
-                break;
-            case "ec-red":
-            case "ec-green":
-            case "ec-blue":
-                enhanceColorChannel(data, {
-                    red: el.split("-")[1] === "red" ? true : false,
-                    green: el.split("-")[1] === "green" ? true : false,
-                    blue: el.split("-")[1] === "blue" ? true : false,
-                });
-                break;
-            case "laplacian":
-                const appliedMatrix = applyMatrix(data, img.naturalWidth, [
-                    [0, 1, 0],
-                    [1, -4, 1],
-                    [0, 1, 0],
-                ]);
-                convertToOriginal(appliedMatrix, data);
-                break;
-            case "sobel":
-                const sobelLeft = applyMatrix(data, img.naturalWidth, [
-                    [-1, 0, 1],
-                    [-2, 0, 2],
-                    [-1, 0, 1],
-                ]);
-                const sobelUp = applyMatrix(data, img.naturalWidth, [
-                    [-1, -2, -1],
-                    [0, 0, 0],
-                    [1, 2, 1],
-                ]);
-                convertToOriginal(sumImages(sobelLeft, sobelUp), data);
-                break;
-        }
-    });
-
-    setBrightness(data, Number(brightnessInput.value));
+function resetRectSelect() {
+    let bbox = document.getElementById("bbox");
+    showDrag = false;
+    oldx = oldy = x = y = undefined;
+    bbox.style.display = "none";
+    useRect = false;
+    btnRemoveRect.style.display = "none";
 }
 
-//       setGrayscale(data);
-//       setTreshold(data, 150);
-//       removeColorChannels(data, { red: true, green: false, blue: true });
-//       enhanceColorChannel(data, { red: false, green: false, blue: false });
-//       setBrightness(data, 0.8);
+document.getElementById("cont").addEventListener("mousedown", function (e) {
+    oldx = e.clientX;
+    oldy = e.clientY;
+    showDrag = true;
+    e.preventDefault();
+});
 
-//     applyBlur(
-//         data,
-//         img.naturalWidth,
-//         [
-//             [1, 2, 1],
-//             [2, 4, 2],
-//             [1, 2, 1],
-//         ],
-//         16
-//     );
+document.getElementById("cont").addEventListener("mousemove", function (e) {
+    if (showDrag == true) {
+        useRect = true;
+        btnRemoveRect.style.display = "inline-block";
 
-//     const appliedMatrix = applyMatrix(data, img.naturalWidth, [
-//         [0, 1, 0],
-//         [1, -4, 1],
-//         [0, 1, 0],
-//     ]);
+        x = e.clientX;
+        y = e.clientY;
+        let bbox = document.getElementById("bbox");
+        let contbox = document.getElementById("cont");
 
-//     const sharpenedImg = unsharpMasking(data, img.naturalWidth);
-// };
+        let w = x > oldx ? x - oldx : oldx - x;
+        let h = y > oldy ? y - oldy : oldy - y;
+        let addx = 0,
+            addy = 0;
+
+        if (x < oldx) {
+            addx = w;
+        }
+        if (y < oldy) {
+            addy = h;
+        }
+        bbox.style.left = oldx - parseInt(contbox.offsetLeft + addx) + "px";
+        bbox.style.top = oldy - parseInt(contbox.offsetTop + addy) + "px";
+        bbox.style.width = w + "px";
+        bbox.style.height = h + "px";
+        bbox.style.display = "block";
+    }
+    e.preventDefault();
+});
+
+document.getElementById("cont").addEventListener("mouseup", function (e) {
+    showDrag = false;
+    e.preventDefault();
+});

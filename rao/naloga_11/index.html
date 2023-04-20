@@ -15,7 +15,12 @@
     <div class="container">
         <input type="file" id="file-input" class="mb-3" /><br />
         <div class="flex gap-1 mb-3">
-            <img id="pic">
+            <div>
+                <div id="cont" class="focus-image">
+                    <img id="pic">
+                    <div id="bbox"></div>
+                </div>
+            </div>
             <div id="final-img" class="hidden"></div>
             <div id="loader" class="hidden">
                 <div class="lds-ring">
@@ -37,7 +42,8 @@
                             <button class="apply-filter-button btn-default" data-fname="threshold">Threshold</button>
                             <button class="apply-filter-button btn-default" data-fname="box-blur">Box blur</button>
                             <button class="apply-filter-button btn-default" data-fname="sharpening">Sharpening</button>
-                            <button class="apply-filter-button btn-default" data-fname="unsharp-masking">Unsharp masking</button>
+                            <button class="apply-filter-button btn-default" data-fname="unsharp-masking">Unsharp
+                                masking</button>
                             <button class="apply-filter-button btn-default" data-fname="laplacian">Laplacian</button>
                             <button class="apply-filter-button btn-default" data-fname="sobel">Sobel</button>
                         </div>
@@ -61,11 +67,13 @@
                     <div class="filter-section">
                         <h1>Brightness (<span id="brightness-val">1</span>)</h1>
                         <div class="flex gap-1 mb-3">
-                            <input type="range" id="brightness-input" name="brightness" default="1" min="0" max="2" step="0.01"/>
+                            <input type="range" id="brightness-input" name="brightness" default="1" min="0" max="2"
+                                step="0.01" />
                         </div>
                     </div>
-                    <button id="btn-undo" class="btn-primary mb-3">Remove last</button>
-                    <button id="btn-remove-all" class="btn-primary mb-3">Remove All</button><br />
+                    <button id="btn-undo" class="btn-primary mb-3 mr-1">Remove last</button>
+                    <button id="btn-remove-all" class="btn-primary mb-3 mr-5px">Remove All</button>
+                    <button id="btn-remove-rect" class="btn-outline-error mb-3">Remove selection box</button><br />
                     <button id="btn" class="btn-primary">Apply</button>
                 </div>
                 <div>
